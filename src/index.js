@@ -1,4 +1,5 @@
 const EventEmitter = require('events').EventEmitter;
+const { parentPort } = require('worker_threads');
 
 const uuid = () => {
   const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -6,7 +7,7 @@ const uuid = () => {
 }
 
 /**
- * This is a small lib for (mostly) promisified native process IPC communication
+ * This is a small lib for (mostly) promisified native worker IPC communication
  * @example
  * // parent
  * p.send('info').then(console.log) // 'mydata'
@@ -18,11 +19,11 @@ const uuid = () => {
  */
 class ProcessCallAndResponse extends EventEmitter {
   /**
-   * @param {Process} [p=process] Optional process to pass
+   * @param {MessagePort} [p=require('worker_threads').parentPort] Optional process to pass
    */
   constructor (p) {
     super();
-    this.process = p || process;
+    this.process = p || parentPort;
     this.process.on('message', message => {
       if (!('__ID' in message)) return;
       new Promise((resolve, reject) => {
@@ -32,9 +33,9 @@ class ProcessCallAndResponse extends EventEmitter {
           message.timeout
         );
       }).then((data) => {
-        this.process.send({ __ID: message.__ID, data });
+        this.process.postMessage({ __ID: message.__ID, data });
       }).catch((error) => {
-        this.process.send({ __ID: message.__ID, error: error.message });
+        this.process.postMessage({ __ID: message.__ID, error: error.message });
       })
     });
   }
@@ -48,7 +49,7 @@ class ProcessCallAndResponse extends EventEmitter {
   send (event, data, timeout) {
     return new Promise((resolve, reject) => {
       const tracker = uuid();
-      this.process.send({ __ID: tracker, event, data, timeout });
+      this.process.postMessage({ __ID: tracker, event, data, timeout });
       const handler = message => {
         if (message.__ID !== tracker) return;
         this.process.removeListener('message', handler);

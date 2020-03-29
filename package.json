@@ -1,5 +1,5 @@
 {
-  "name": "process-as-promised",
+  "name": "workers-as-promised",
   "version": "1.0.1",
   "description": "This is a small lib for promisified IPC communication",
   "main": "src/index.js",
@@ -10,13 +10,16 @@
     "test": "cd ./test && node test_master.js"
   },
   "author": "Gus Caplan <me@gus.host>",
+  "contributors": [
+    "TTtie <tttiett@outlook.com>"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GusCaplan/ProcessAsPromised.git"
+    "url": "git+https://github.com/tt-bot-dev/WorkersAsPromised.git"
   },
   "bugs": {
-    "url": "https://github.com/GusCaplan/ProcessAsPromised/issues"
+    "url": "https://github.com/tt-bot-dev/WorkersAsPromised/issues"
   },
-  "homepage": "https://github.com/GusCaplan/ProcessAsPromised#readme"
+  "homepage": "https://github.com/tt-bot-dev/WorkersAsPromised#readme"
 }

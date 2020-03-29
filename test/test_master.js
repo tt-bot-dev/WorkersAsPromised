@@ -1,7 +1,7 @@
-const childProcess = require('child_process');
+const { Worker } = require('worker_threads');
 const P = require('../src/index');
 
-const p = new P(childProcess.fork('./test_client.js'));
+const p = new P(new Worker('./test_client.js'));
 
 p.send('test', 2).then(res => {
   console.log('EXPECTING test 4')
